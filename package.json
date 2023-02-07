@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "test task for techstack ltd., backend-part",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ValeriiRuchko/apartments_test_task.git"
+  },
+  "author": "valerii_ruchko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ValeriiRuchko/apartments_test_task/issues"
+  },
+  "homepage": "https://github.com/ValeriiRuchko/apartments_test_task#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
