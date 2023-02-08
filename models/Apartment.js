@@ -6,7 +6,8 @@ const Apartment = db.define(
   "apartment",
   {
     id: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
@@ -20,11 +21,11 @@ const Apartment = db.define(
     name: {
       type: DataTypes.STRING,
       validate: {
-        len: [0, 100],
+        len: [0, 98],
       },
     },
     price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       validate: {
         isNumeric: true,
         min: 1,
@@ -33,7 +34,7 @@ const Apartment = db.define(
     description: {
       type: DataTypes.STRING(1000),
       validate: {
-        len: [0, 1000],
+        len: [0, 998],
       },
     },
   },

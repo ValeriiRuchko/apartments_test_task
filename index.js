@@ -3,7 +3,13 @@ const app = express();
 const port = 3000;
 const bodyParser = require("body-parser");
 // establishing the connection
-const Apartment = require('./models/Apartment');
+const Apartment = require("./models/Apartment");
+const {
+  getAllApartments,
+  createNewApartment,
+  getApartmentById,
+  deleteApartmentById,
+} = require("./controllers/queries");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -21,15 +27,83 @@ Apartment.sync()
     console.log(err);
   });
 
-// all of our routes and corresponding http-requests 
-app.route("/apartments")
-.get((req, res) => {
-  res.send("Hello world!");
-});
+// all of our routes and corresponding http-requests
+// ----- ----- ----- ----- ----- ----- ----- -----
+// ROUTE: /apartments
+app
+  .route("/apartments")
+  .get((req, res) => {
+    // price: asc/desc; rooms= any integer number;
+    const { price, rooms: rooms_param } = req.query;
+    // generating our query options depending on what query-parameters we have
+    const options = {};
+    if (Object.keys(req.query).length === 2) {
+      options["where"] = { rooms: parseInt(rooms_param) };
+      options["order"] = [["price", price.toUpperCase()]];
+    } else if (price) {
+      options["order"] = [["price", price.toUpperCase()]];
+    } else if (rooms_param) {
+      options["where"] = { rooms: parseInt(rooms_param) };
+    }
 
-// app.route("/apartments/:id").get((req, res) => {}))
-// app.route("/apartments").post((req, res) => {}))
-// app.route("/apartments/:id").delete((req, res) => {}))
+    getAllApartments(options)
+      .then((data) => {
+        res.send(JSON.stringify(data, null, 4));
+      })
+      .catch((err) => {
+        console.log(err);
+        res
+          .status(400)
+          .json({ info: "Error while retrieving list of all apartments" });
+      });
+  })
+  .post((req, res) => {
+    const body_params = req.body;
+    createNewApartment(body_params)
+      .then((data) => {
+        res
+          .status(200)
+          .json({ info: "New apartment has been added succesfully" });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json({ info: "Data you have provided is invalid" });
+      });
+  });
+// ----- ----- ----- ----- ----- ----- ----- -----
+// ROUTE: /apartments/:id
+app
+  .route("/apartments/:id")
+  .get((req, res) => {
+    const id = req.params.id;
+    getApartmentById(id)
+      .then((data) => {
+        res.send(JSON.stringify(data, null, 4));
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json({
+          info: "Error occured while retrieving data about this apartment",
+        });
+      });
+  })
+  .delete((req, res) => {
+    const id = req.params.id;
+    deleteApartmentById(id)
+      .then((data) => {
+        res
+          .status(200)
+          .json({ info: "Apartment has been deleted succesfully" });
+      })
+      .catch((err) => {
+        console.log(err);
+        res
+          .status(400)
+          .json({ info: "Error occured while deleting this apartment" });
+      });
+  });
+
+// app.route("/apartments/:id"))
 // ------ ------ ------
-// Would be a plus: 
+// Would be a plus:
 // app.route("/apartments/:id").put((req, res) => {}))
