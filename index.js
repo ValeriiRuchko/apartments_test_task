@@ -9,6 +9,7 @@ const {
   createNewApartment,
   getApartmentById,
   deleteApartmentById,
+  updateApartmentById,
 } = require("./controllers/queries");
 
 app.use(bodyParser.json());
@@ -101,9 +102,18 @@ app
           .status(400)
           .json({ info: "Error occured while deleting this apartment" });
       });
+  })
+  .put((req, res) => {
+    const id = req.params.id;
+    const body_params = req.body;
+    updateApartmentById(id, body_params)
+      .then((data) => {
+        res
+          .status(200)
+          .json({ info: "Apartment info has been updated succesfully" });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json({ info: "Data you have provided is invalid" });
+      });
   });
-
-// app.route("/apartments/:id"))
-// ------ ------ ------
-// Would be a plus:
-// app.route("/apartments/:id").put((req, res) => {}))
