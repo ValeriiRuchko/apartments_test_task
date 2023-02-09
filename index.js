@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const bodyParser = require("body-parser");
+const cors = require("cors");
 // establishing the connection
 const Apartment = require("./models/Apartment");
 const {
@@ -16,6 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // now we can serve static files to the client
 app.use(express.static("public"));
+app.use(cors());
 // syncing our model with our database and catching all errors
 Apartment.sync()
   .then((result) => {
