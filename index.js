@@ -51,6 +51,7 @@ app
 
     getAllApartments(options)
       .then((data) => {
+        res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(data, null, 4));
       })
       .catch((err) => {
@@ -81,6 +82,7 @@ app
     const id = req.params.id;
     getApartmentById(id)
       .then((data) => {
+        res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(data, null, 4));
       })
       .catch((err) => {
